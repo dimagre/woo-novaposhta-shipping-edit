@@ -48,10 +48,12 @@ jQuery( document ).ready( function( $ ) {
                     $('#billing_city_field').addClass('validate-required').show();
                     $('#billing_state_field').addClass('validate-required').show();
                     $('#billing_postcode_field').addClass('validate-required').show();
+                    $('#billing_address_1_field').addClass('validate-required').show();
 
                     $('#shipping_city_field').removeClass('validate-required').hide();
                     $('#shipping_state_field').removeClass('validate-required').hide();
                     $('#shipping_postcode_field').removeClass('validate-required').hide();
+                    $('#shipping_address_1_field').removeClass('validate-required').hide();
                 }
 
             } else {
@@ -71,10 +73,12 @@ jQuery( document ).ready( function( $ ) {
                     $('#billing_city_field').removeClass('validate-required').hide();
                     $('#billing_state_field').removeClass('validate-required').hide();
                     $('#billing_postcode_field').removeClass('validate-required').hide();
+                    $('#billing_address_1_field').removeClass('validate-required').hide();
 
                     $('#shipping_city_field').addClass('validate-required').show();
                     $('#shipping_state_field').addClass('validate-required').show();
                     $('#shipping_postcode_field').addClass('validate-required').show();
+                    $('#shipping_address_1_field').addClass('validate-required').show();
                 }
 
             }
@@ -92,10 +96,12 @@ jQuery( document ).ready( function( $ ) {
                 $('#billing_city_field').addClass('validate-required').show();
                 $('#billing_state_field').addClass('validate-required').show();
                 $('#billing_postcode_field').addClass('validate-required').show();
+                $('#billing_address_1_field').addClass('validate-required').show();
 
                 $('#shipping_city_field').addClass('validate-required').show();
                 $('#shipping_state_field').addClass('validate-required').show();
                 $('#shipping_postcode_field').addClass('validate-required').show();
+                $('#shipping_address_1_field').addClass('validate-required').show();
             }
 
             fields_unbinding( $region_select_bill, $city_select_bill, $warehouse_select_bill );
@@ -135,11 +141,11 @@ jQuery( document ).ready( function( $ ) {
                             allowClear: true
                         });
 
-	        	        $checkout_form.block({
-	        	            message: null,
+                        $checkout_form.block({
+                            message: null,
                             overlayCSS: { background: '#fff', opacity: 0.5 }
                         });
-	        	    },
+                    },
                     data: {
                         'action': 'uni_woo_novaposhta_get_cities',
                         'region_ref': ref
@@ -191,11 +197,11 @@ jQuery( document ).ready( function( $ ) {
                             allowClear: true
                         });
 
-            	        $checkout_form.block({
-            	            message: null,
+                        $checkout_form.block({
+                            message: null,
                             overlayCSS: { background: '#fff', opacity: 0.5 }
                         });
-            	    },
+                    },
                     data: {
                         'action': 'uni_woo_novaposhta_get_warehouses',
                         'city_id': city

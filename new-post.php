@@ -14,29 +14,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) )) {
 
-		final class Uni_Woo_NovaPoshta_Setup {
+        final class Uni_Woo_NovaPoshta_Setup {
 
             protected static $_instance = null;
 
             public $is_query = false;
 
-        	public static function instance() {
-        		if ( is_null( self::$_instance ) ) {
-        			self::$_instance = new self();
-        		}
-        		return self::$_instance;
-        	}
+            public static function instance() {
+                if ( is_null( self::$_instance ) ) {
+                    self::$_instance = new self();
+                }
+                return self::$_instance;
+            }
 
-			public function __construct() {
+            public function __construct() {
                 add_action( 'init', array( $this, 'init' ) );
-			}
+            }
 
-			public function init() {
+            public function init() {
 
-				load_plugin_textdomain( 'novaposhta', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+                load_plugin_textdomain( 'novaposhta', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
                 add_action( 'woocommerce_shipping_init', array( $this, 'novaposhta_shipping_method_init' ) );
-				add_filter( 'woocommerce_shipping_methods', array( $this, 'novaposhta_shipping_method_add' ) );
+                add_filter( 'woocommerce_shipping_methods', array( $this, 'novaposhta_shipping_method_add' ) );
 
                 // checkout page
                 add_filter( 'woocommerce_billing_fields', array( $this, 'add_np_billing_fields') );
@@ -47,7 +47,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                 // cart page
                 add_action( 'woocommerce_after_calculate_totals', array( $this, 'calc_fields' ) );
 
-				add_filter( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+                add_filter( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 
                 // ajax call - get cities
                 add_action( 'wp_ajax_uni_woo_novaposhta_get_cities', array( $this, 'get_cities' ) );
@@ -59,7 +59,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                 add_filter( 'woocommerce_checkout_fields', array( $this, 'disable_default_checkout_fields') );
                 //add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'refresh_billing_form' ) );
 
-			}
+            }
 
             /*function refresh_billing_form( $fragments ){
 
@@ -75,12 +75,12 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
             //
             public function is_np() {
-				if ( WC()->session->get( 'chosen_shipping_methods' )[0] === 'novaposhta' ) {
+                if ( WC()->session->get( 'chosen_shipping_methods' )[0] === 'novaposhta' ) {
                     return true;
                 } else {
                     return apply_filters('uni_woo_is_np_method_chosen', false, WC()->session);
                 }
-			}
+            }
 
             //
             public function calc_fields( $fields ) {
@@ -107,7 +107,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
             //
             public function disable_default_checkout_fields( $fields ) {
-				if ( true === $this->is_np() ) {
+                if ( true === $this->is_np() ) {
 
                     $type = ( $this->is_shipping_different() ) ? 'billing' : 'shipping';
 
@@ -131,21 +131,21 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                             $fields[$type][$type . '_postcode']['required'] = false;
                         }
                     }
-
+                    PC::debug($type, 'yo');
                     return $fields;
 
-				    // can be used along with fragment reload
-                    /*unset($fields['billing']['billing_state']);
-                    unset($fields['billing']['billing_city']);
-                    unset($fields['billing']['billing_address_1']);
-                    unset($fields['billing']['billing_address_2']);
-                    unset($fields['billing']['billing_postcode']);
+                    // can be used along with fragment reload
+                    // unset($fields['billing']['billing_state']);
+                    // unset($fields['billing']['billing_city']);
+                    // unset($fields['billing']['billing_address_1']);
+                    // unset($fields['billing']['billing_address_2']);
+                    // unset($fields['billing']['billing_postcode']);
 
-                    unset($fields['shipping']['shipping_state']);
-                    unset($fields['shipping']['shipping_city']);
-                    unset($fields['shipping']['shipping_address_1']);
-                    unset($fields['shipping']['shipping_address_2']);
-                    unset($fields['shipping']['shipping_postcode']);*/
+                    // unset($fields['shipping']['shipping_state']);
+                    // unset($fields['shipping']['shipping_city']);
+                    // unset($fields['shipping']['shipping_address_1']);
+                    // unset($fields['shipping']['shipping_address_2']);
+                    // unset($fields['shipping']['shipping_postcode']);
                 } else {
                     $fields['billing']['billing_np_region']['required']      = false;
                     $fields['billing']['billing_np_city']['required']        = false;
@@ -155,7 +155,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                     $fields['shipping']['shipping_np_warehouse']['required']   = false;
                 }
                 return $fields;
-			}
+            }
 
             //
             public function add_np_billing_fields( $fields ){
@@ -299,7 +299,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
                 }
 
-    		}
+            }
 
             public function get_warehouses() {
 
@@ -325,7 +325,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
                     $warehouses = $options_warehouses = array();
                     if ( ! get_transient('uni_woo_novaposhta_warehouses_in_' . $city_id) ) {
-        				    $data = array(
+                            $data = array(
                                 'body' => array(
                                     'apiKey' => $api_key,
                                     'modelName' => 'AddressGeneral',
@@ -355,7 +355,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                     }
 
                 }
-    		}
+            }
 
             //
             public function validate_np_fields_data(){
@@ -437,7 +437,7 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
             public function scripts() {
 
-				wp_enqueue_script('uni-woo-novaposhta', $this->plugin_url() . '/assets/js/script.js',
+                wp_enqueue_script('uni-woo-novaposhta', $this->plugin_url() . '/assets/js/script.js',
                     array( 'jquery', 'select2', 'jquery-blockui' ),
                    '1.0.0',
                    true
@@ -450,19 +450,19 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
                         'city_place' => esc_html__('Select a City', 'novaposhta'),
                         'warehouse_place' => esc_html__('Select a Warehouse', 'novaposhta'),
                     )
-            	);
+                );
 
-            	wp_localize_script( 'uni-woo-novaposhta', 'uni_woo_novaposhta', $additonal_params );
-			}
+                wp_localize_script( 'uni-woo-novaposhta', 'uni_woo_novaposhta', $additonal_params );
+            }
 
-			public function novaposhta_shipping_method_init() {
-				include_once( 'inc/class-uni-woo-novaposhta-shipping.php' );
-			}
+            public function novaposhta_shipping_method_init() {
+                include_once( 'inc/class-uni-woo-novaposhta-shipping.php' );
+            }
 
-			public function novaposhta_shipping_method_add( $methods ) {
-				$methods['novaposhta'] = 'Uni_NewPost_Shipping_Method';
-				return $methods;
-			}
+            public function novaposhta_shipping_method_add( $methods ) {
+                $methods['novaposhta'] = 'Uni_NewPost_Shipping_Method';
+                return $methods;
+            }
 
             //
             public function api_query( $data, $url ){
@@ -500,34 +500,34 @@ if (in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
                 return $result;
 
-        	}
+            }
 
             //
             public function plugin_url() {
-        		return untrailingslashit( plugins_url( '/', __FILE__ ) );
-        	}
+                return untrailingslashit( plugins_url( '/', __FILE__ ) );
+            }
 
             //
             protected function _r() {
                 $result = array(
-        		    'status' 	=> 'error',
-        			'message' 	=> esc_html__('Error!', 'novaposhta'),
-                    'response'	=> '',
-        			'redirect'	=> ''
-        		);
+                    'status'    => 'error',
+                    'message'   => esc_html__('Error!', 'novaposhta'),
+                    'response'  => '',
+                    'redirect'  => ''
+                );
                 return $result;
             }
 
             public function plugin_deactivate(){
             }
 
-		}
+        }
 
         /**
          *  The main object
          */
         function UniWooNovaPoshta() {
-        	return Uni_Woo_NovaPoshta_Setup::instance();
+            return Uni_Woo_NovaPoshta_Setup::instance();
         }
 
         // Global for backwards compatibility.
